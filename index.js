@@ -1,42 +1,3 @@
-// import express from 'express'
-// import dotenv from 'dotenv'
-// import cors from 'cors'
-// import { connectToMongo } from './database/database.js';
-// import userRouter from './routes/userRoutes.js';
-
-
-// dotenv.config()
-
-// const app=express();
-
-// app.use(cors({origin:'*'}))
-// app.use(express.json())
-// app.use(express.urlencoded({ extended: true })); 
-
-// connectToMongo();
-
-// app.get('/',(req,res)=>{
-//     res.send("Testing Vercel")
-//     })
-
-// // app.use(fileUpload({
-// //     useTempFiles : false
-// // }));
-
-
-
-// app.use("/api/user",userRouter)
-
-
-// app.listen(process.env.PORT,()=>{
-//     console.log(`Server is running on port ${process.env.PORT}`)
-// })
-
-
-
-
-// index.js
-
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -48,7 +9,14 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors({ origin: '*' }));
+// CORS configuration
+const corsOptions = {
+    origin: '*', // Allow all origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -64,4 +32,3 @@ app.use("/api/form", formRouter); // Add the form routes
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
 });
-
