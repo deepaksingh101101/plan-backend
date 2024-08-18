@@ -201,19 +201,18 @@ export const sendOtp = async (req, res, next) => {
   try {
     if (errors.isEmpty()) {
       const isUserExist = await userModel.findOne({ email });
-      if (isUserExist===null) {
+      if (!isUserExist===null) {
         return res.status(400).json({
           status: false,
-          message: "User does not exist with this email"
+          message: "User already exist with this email"
         });
       }
 
       const otp=generateOTP()
 
-      const isExist = await otpModel.findOne({ email });
+      // const isExist = await otpModel.findOne({ email });
 
       if (isExist) {
-      
           // Delete the entry from the OTP model
           await otpModel.findOneAndDelete({ email });
       
@@ -271,18 +270,11 @@ export const sendOtp = async (req, res, next) => {
 
 export const verifyOtp = async (req, res, next) => {
   const errors = validationResult(req);
-  const { otp,email } = req.body;
+  const { otp,email,name,password } = req.body;
 
   try {
     if (errors.isEmpty()) {
-      const isUserExist = await userModel.findOne({ email });
-
-      if (!isUserExist) {
-        return res.status(200).json({
-          status: false,
-          message: "User does not exist with this email"
-        });
-      }
+  
 
       
       const isOtpValid=await otpModel.findOne({email:email,otp:otp})
@@ -290,7 +282,18 @@ export const verifyOtp = async (req, res, next) => {
 
       if (isOtpValid) {
        await otpModel.findOneAndUpdate({email:email},{isVerified:true})
-      return res.status(200).json({status:"true",message:"Account Verified Successfully   "})
+       const hashedPassword = await bcrypt.hash(password, 12);
+       const newUser = new userModel({
+         name:name,
+         email: email,
+         password: hashedPassword,
+       });
+       await newUser.save();
+   
+       return res.status(201).json({
+         status: true,
+         message: "User Created Successfully"
+       });
       } else {
         return res.status(400).json({status:"false",message:"Incorrect OTP"})
       }
