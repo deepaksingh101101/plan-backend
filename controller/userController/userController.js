@@ -1,5 +1,6 @@
 import userModel from '../../models/userModel.js';
 import Jwt from 'jsonwebtoken'
+import nodemailer from 'nodemailer';
 
 // import {body} from 'express-validator'
 import bcrypt from "bcrypt";
@@ -201,7 +202,7 @@ export const sendOtp = async (req, res, next) => {
   try {
     if (errors.isEmpty()) {
       const isUserExist = await userModel.findOne({ email });
-      if (!isUserExist===null) {
+      if (isUserExist) {
         return res.status(400).json({
           status: false,
           message: "User already exist with this email"
@@ -210,7 +211,7 @@ export const sendOtp = async (req, res, next) => {
 
       const otp=generateOTP()
 
-      // const isExist = await otpModel.findOne({ email });
+      const isExist = await otpModel.findOne({ email });
 
       if (isExist) {
           // Delete the entry from the OTP model
