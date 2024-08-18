@@ -245,8 +245,8 @@ export const sendOtp = async (req, res, next) => {
       const mailOptions = {
         from: 'deepaksingh104104@gmail.com', // Sender email address
         to: email, // Recipient email address from the request body
-        subject: 'Verify Your HMS OTP', // Email subject
-        text: `Hii, ${otp} is your OTP to reset Your MYTR Password ` // Email body
+        subject: 'Verify Your OTP', // Email subject
+        text: `Hii, ${otp} is your OTP ` // Email body
       };
 
       // Send email
