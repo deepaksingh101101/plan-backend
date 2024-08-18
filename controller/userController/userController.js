@@ -4,8 +4,8 @@ import Jwt from 'jsonwebtoken'
 // import {body} from 'express-validator'
 import bcrypt from "bcrypt";
 import {validationResult} from 'express-validator'
-// import { generateOTP } from '../../middleware/generateOtp.js';
-// import otpModel from '../../models/otpModel.js';
+import { generateOTP } from '../../middleware/generateOtp.js';
+import otpModel from '../../models/otpModel.js';
 
 
 
@@ -290,7 +290,7 @@ export const verifyOtp = async (req, res, next) => {
 
       if (isOtpValid) {
        await otpModel.findOneAndUpdate({email:email},{isVerified:true})
-      return res.status(200).json({status:"true",message:"OTP verified, Now You Can Reset Your Password  "})
+      return res.status(200).json({status:"true",message:"Account Verified Successfully   "})
       } else {
         return res.status(400).json({status:"false",message:"Incorrect OTP"})
       }
